@@ -1,18 +1,29 @@
-<nav x-data="{ open: false }" class="bg-red-500 border-b border-2 border-red-500 text-white text-3xl">
+<nav x-data="{ open: false }" class="bg-red-500 text-white">
     <!-- Primary Navigation Menu -->
-        <div class="flex justify-between h-16">
-            <div class="flex">
+        <div class="flex justify-between items-center h-16">
+            <div class="flex m-2 justify-start">
                 <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                <h1 class="flex justify-start items-center text-5xl text-white font-bold">Larablog</h1>
-                    <x-nav-link class="text-white font-bold border-b-0 text-4xl hover:text-red-900" :href="route('posts.index')" :active="request()->routeIs('posts.index')">
-                        {{ __('Posts') }}
+                <div class="flex flex-row gap-4 font-bold">
+                    <x-nav-link class="text-white font-bold text-xl border-none hover:text-red-900" :href="route('posts.index')" :active="request()->routeIs('posts.index')">
+                        <h1 class="text-4xl">{{ __('Larablog') }}</h1>
                     </x-nav-link>
-                    <x-nav-link class="text-white font-bold border-b-0 text-4xl hover:text-red-900 no-underline" :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                    <!-- <x-nav-link class="text-white font-bold text-xl border-none hover:text-red-900" :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
-                    </x-nav-link>
+                    </x-nav-link> -->
                 </div>
             </div>
+
+            <!-- Login -->
+            @guest
+            <div class="flex flex-row">
+                <div class="hidden sm:flex sm:items-center sm:ms-6">
+                    <a href="{{ route('login') }}" class="text-white font-bold text-3xl mr-4 hover:text-red-900">Login</a>
+                </div>
+                <div>
+                    <a href="{{ route('register') }}" class="text-white font-bold text-3xl mr-4 hover:text-red-900">Register</a>
+                </div>
+            </div>
+            @endguest
 
             <!-- Settings Dropdown -->
             @auth

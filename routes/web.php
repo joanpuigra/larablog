@@ -9,16 +9,19 @@ use Illuminate\Support\Facades\Route;
 //     return view('welcome');
 // });
 
+// POSTS
 Route::get('/', [PostController::class, 'index'])->name('posts.index');
+
+// Create new post
+Route::get('/posts/create', [PostController::class, 'create'])->middleware('auth')->name('posts.create');
 Route::post('/', [PostController::class, 'store'])->middleware('auth')->name('posts.store');
-
-Route::get('/create', [PostController::class, 'create'])->middleware('auth')->name('posts.create');
-
+ 
+// Read more
 Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show');
 
 Route::delete('/posts/{post}', [PostController::class, 'destroy'])->middleware('auth')->name('posts.destroy');
 
-Route::post('/{post}/comments', [CommentController::class, 'store'])->middleware('auth')->name('comments.store');
+Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->middleware('auth')->name('comments.store');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

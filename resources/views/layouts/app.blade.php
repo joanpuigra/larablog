@@ -28,9 +28,14 @@
             @endisset
 
             <!-- Page Content -->
-            <main>
+            <main class="min-h-full">
                 {{ $slot }}
             </main>
+
+            <!-- Page Footer -->
+            <footer class="bottom-0 bg-red-500 text-white p-2 flex justify-center items-center w-full">
+                <p class="flex gap-2 items-center text-2xl">© Reserved rights <a class="font-bold hover:text-red-900" href="http://joanpuigra.com">joanpuigra</a></p>
+            </footer>
         </div>
     </body>
 </html>

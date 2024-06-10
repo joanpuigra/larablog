@@ -1,7 +1,7 @@
 <x-app-layout>
   <div class="py-4">
     <div class="max-w-7xl mx-auto">
-          <div class="grid border-x-2 border-red-500 grid-cols-2 gap-4 p-4 max-w-full sm:p-6 sm:rounded-lg">
+          <div class="grid border-x-2 border-red-500 grid-cols-2 gap-4 p-4 max-w-full sm:p-6 sm:py-2 sm:rounded-lg">
             @foreach ($posts as $post)
             @if ($posts->isEmpty())
               <p class="text-red-500 font-bold text-3xl">There are no posts.</p>
@@ -21,25 +21,28 @@
                     <div class="flex justify-center items-center mt-4 bg-red-500 p-4 rounded-xl text-white font-bold">
                       <a href="{{ route('posts.show', $post->id) }}">Read More</a>
                     </div>
-                    <div class="flex justify-center items-center mt-4 bg-red-500 p-4 rounded-xl text-white font-bold">Edit
-                      
-                    </div>
-                    <div class="flex justify-center items-center mt-4 bg-red-500 p-4 rounded-xl text-white font-bold">
-                      <a href="{{ route('posts.destroy', $post->id) }}">Delete</a>
-                    </div>
+                    @auth
+                      <div class="flex justify-center items-center mt-4 bg-red-500 p-4 rounded-xl text-white font-bold">Edit
+                        
+                      </div>
+                      <div class="flex justify-center items-center mt-4 bg-red-500 p-4 rounded-xl text-white font-bold">
+                        <a href="{{ route('posts.destroy', $post->id) }}">Delete</a>
+                      </div>
+                    @endauth
                     <div class="flex justify-center items-center mt-4 bg-red-500 p-4 rounded-xl text-white font-bold">Comments
-
                     </div>
                   </div>
               </article>
           @endif
           @endforeach
           </div>
-            <div class="flex self-center justify-center items-center">
+          @auth
+            <div class="flex self-center mt-2 justify-center items-center">
               <div class="bg-red-500 p-4 rounded-xl text-white font-bold">
                 <a href="{{ route('posts.create') }}">Add new post</a>
               </div>
             </div>
+          @endauth
           </div>
     </div>
   </div>
