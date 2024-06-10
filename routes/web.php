@@ -19,9 +19,17 @@ Route::post('/', [PostController::class, 'store'])->middleware('auth')->name('po
 // Read more
 Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show');
 
-Route::delete('/posts/{post}', [PostController::class, 'destroy'])->middleware('auth')->name('posts.destroy');
+// Update post
+Route::get('/posts/{post}/edit', [PostController::class, 'edit'])->middleware('auth')->name('posts.edit');
+Route::patch('/posts/{post}/update', [PostController::class, 'update'])->middleware('auth')->name('posts.update');
 
+// Delete post
+Route::get('/posts/{post}/delete', [PostController::class, 'destroy'])->middleware('auth')->name('posts.destroy');
+
+// Add comment
+Route::get('/posts/{post}/comments', [CommentController::class, 'index'])->name('comments.index');
 Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->middleware('auth')->name('comments.store');
+Route::delete('/posts/{post}/comments/{comment}', [CommentController::class, 'destroy'])->middleware('auth')->name('comments.destroy');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

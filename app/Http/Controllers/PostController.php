@@ -8,17 +8,27 @@ use App\Models\Comment;
 
 class PostController extends Controller
 {
+    // Show posts
     public function index()
     {
         $posts = Post::all();
         return view('posts.index', compact('posts'));
     }
 
+    // Show by id
+    public function show($id)
+    {
+        $post = Post::find($id);
+        return view('posts.show', ['post' => $post]);
+    }
+
+    // Create new post
     public function create()
     {
         return view('posts.create');
     }
 
+    // Store new post
     public function store(Request $request)
     {
         $request->validate([
@@ -39,37 +49,36 @@ class PostController extends Controller
         }
     }
 
-    public function show($id)
+    // Edit post
+    public function edit($id)
     {
         $post = Post::find($id);
-        return view('posts.show', ['post' => $post]);
+        return view('posts.edit', ['post' => $post]);
     }
 
-    public function edit(Post $post)
-    {
-        $post = Post::findOrfail($post->id);
-        return view('posts.edit', compact('post'));
-    }
-
-    public function update(Request $request, Post $post)
+    // Update post
+    public function update(Request $request, $id)
     {
         $request->validate([
             'title' => 'required',
             'content' => 'required',
         ]);
 
-        $post = Post::findOrfail($post->id);
-        $post->update([
-            'title' => $request->title,
-            'content' => $request->content,
-        ]);
-
-        return redirect()->route('posts.index'->with('success', 'Post updated successfully'));
+        if(auth()->check()) {
+            $post = Post::find($id);
+            $post->update([
+                'title' => $request->title,
+                'content' => $request->content,
+            ]);
+            return redirect()->route('posts.index')->with('success', 'Post updated successfully');
+        } else {
+            return redirect()->route('posts.index')->with('error', 'You must be logged in to update a post');
+        }
     }
 
-    public function destroy(Post $post)
+    public function destroy($id)
     {
-        $post = Post::findOrfail($post->id);
+        $post = Post::find($id);
         
         if(auth()->check()) {
             $post->delete();
