@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Post;
-use App\Models\Comment;
 
 class PostController extends Controller
 {
@@ -19,7 +18,8 @@ class PostController extends Controller
     public function show($id)
     {
         $post = Post::find($id);
-        return view('posts.show', ['post' => $post]);
+        $comments = $post->comments;
+        return view('posts.show', compact('post', 'comments'));
     }
 
     // Create new post
@@ -89,18 +89,6 @@ class PostController extends Controller
             } else {
                 return redirect()->route('posts.index')->with('error', 'You must be logged in to delete a post');
             }
-        }
-    }
-
-    public function destroyComment(Post $post, Comment $comment)
-    {
-        $post = Post::findOrfail($post->id);
-        $comment = Comment::findOrfail($comment->id);
-        if ($comment->author_id != auth()->id()) {
-            return redirect()->route('posts.show', $post)->with('error', 'You can only delete your own comments');
-        } else {
-            $comment->delete();
-            return redirect()->route('posts.show', $post)->with('success', 'Comment deleted successfully');
         }
     }
 }

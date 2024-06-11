@@ -2,7 +2,7 @@
 <x-app-layout>
 <div class="py-4">
     <div class="container mx-auto px-4">
-        <form action="{{ route('comments.store') }}" method="POST">
+        <form action="{{ route('posts.comments.store', $post->id) }}" method="POST">
             @csrf
             <div class="mb-4">
                 <label for="content" class="block text-gray-700 text-sm font-bold mb-2">Comment:</label>
@@ -10,7 +10,7 @@
             </div>
             <div class="flex items-center justify-between">
                 <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
-                    Create Post
+                    Add Comment
                 </button>
             </div>
         </form>

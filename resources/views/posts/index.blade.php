@@ -7,8 +7,9 @@
               <p class="text-red-500 font-bold text-3xl">There are no posts.</p>
             @else
               <article class="rounded-xl shadow-lg">
-                  <div class="mb-4 text-white text-4xl font-bold flex justify-center rounded-xl py-2 bg-red-500 items-center">
+                  <div class="mb-4 p-4 text-white text-4xl font-bold flex flex-row justify-between rounded-xl py-2 bg-red-500 items-center">
                     <h2>{{ $post->title }}</h2>
+                    <h3 class="text-xl">Has {{ $post->comments->count() }} comments</h3>
                   </div>
                   <div class="flex flex-row px-4 justify-between items-center">
                     <p class="flex italic"><b>Created by:</b><span class="ml-2">{{ $post->author->name }}</span></p>
@@ -19,7 +20,7 @@
                   </div>
                   <div class="flex justify-center space-x-2 items-center mb-4 p-4">
                     <div class="flex justify-center items-center mt-4 bg-red-500 hover:bg-red-700 p-4 rounded-xl text-white font-bold">
-                      <a href="{{ route('posts.show', $post->id) }}">Read More</a>
+                      <a href="{{ route('posts.show', $post->id) }}">View Post</a>
                     </div>
                     @auth
                       <div class="flex justify-center items-center mt-4 bg-red-500 hover:bg-red-700 p-4 rounded-xl text-white font-bold">
@@ -29,8 +30,6 @@
                         <a href="{{ route('posts.destroy', $post->id) }}">Delete</a>
                       </div>
                     @endauth
-                    <div class="flex justify-center items-center mt-4 bg-red-500 hover:bg-red-700 p-4 rounded-xl text-white font-bold">Comments
-                    </div>
                   </div>
               </article>
           @endif

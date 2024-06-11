@@ -8,59 +8,73 @@ use App\Models\Comment;
 
 class CommentController extends Controller
 {
-    public function index()
+    public function show(Post $post)
     {
-        $comments = Comment::all();
-        return view('comments.index', compact('comments'));
+        $comments = $post->comments;
+        return view('posts.show', compact('post', 'comments'));
     }
 
-    public function create()
+   
+    public function create(Post $post)
     {
-        return view('comments.create');
+        $comments = $post->comments;
+        return view('posts.comments.create', compact('post', 'comments'));
     }
 
-    public function show(Comment $comment)
-    {
-        return redirect()->route('comments.show', ['comment' => $comment->id]);
-    }
-
-    public function edit(Comment $comment)
-    {
-        $comment = Comment::findOrfail($comment->id);
-        return view('comments.edit', compact('comment'));
-    }
-
-    public function update(Request $request, Comment $comment)
+    public function storeComment(Request $request, Post $post)
     {
         $request->validate([
             'content' => 'required',
-        ]);
-
-        $comment = Comment::findOrfail($comment->id);
-        $comment->update([
-            'content' => $request->content,
-        ]);
-
-        return redirect()->route('comments.index'->with('success', 'Comment updated successfully'));
-    }
-
-    public function store(Request $request, Post $post)
-    {
-        $request->validate([
-            'content' => 'required',
-            'post_id' => 'required',
         ]);
 
         if(auth()->check()) {
             Comment::create([
-                'post_id' => $request->id,
+                'post_id' => $post->id,
                 'content' => $request->content,
                 'author_id' => auth()->id(),
                 'date' => date('Y-m-d H:i:s'),
             ]);
-            return redirect()->route('comments.index')->with('success', 'Comment created successfully');
+            return redirect()->route('posts.show', $post)->with('success', 'Comment created successfully');
         } else {
-            return redirect()->route('comments.index')->with('error', 'You must be logged in to comment');
+            return redirect()->route('posts.show', $post)->with('error', 'You must be logged in to comment');
+        }
+    }
+
+    public function editComment(Post $post, Comment $comment)
+    {
+        $comment = Comment::find($comment->id);
+        return view('comments.edit', compact('comment'));
+    }
+
+    public function updateComment(Request $request, Post $post, Comment $comment)
+    {
+        $request->validate([
+            'content' => 'required',
+        ]);
+
+        $comment = Comment::find($comment->id);
+        $comment->update([
+            'content' => $request->content,
+        ]);
+
+        return redirect()->route('posts.show', $post)->with('success', 'Comment updated successfully');
+    }
+
+    public function destroyComment(Post $post, Comment $comment)
+    {
+        $post = Post::find($post->id);
+        $comment = Comment::find($comment->id);
+
+        if(auth()->check()) {
+            if($comment->author_id != auth()->id()) {
+                return redirect()->route('posts.show', $post)->with('error', 'You can only delete your own comments');
+            } else {
+                $comment->delete();
+                return redirect()->route('posts.show', $post)->with('success', 'Comment deleted successfully');
+            }
+        } else {
+            return redirect()->route('posts.show', $post)->with('error', 'You must be logged in to delete a comment');
         }
     }
 }
+
